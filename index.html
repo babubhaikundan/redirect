@@ -5,11 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Please Wait...</title>
     <style>
+        /* --- Google Font & Keyframes --- */
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
         @keyframes progress-animation { from { width: 100%; } to { width: 0%; } }
-        body { font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background-color: #e9ebee; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; color: #333; box-sizing: border-box; }
-        .container { background-color: #ffffff; padding: 35px 45px; border-radius: 16px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); text-align: center; max-width: 480px; width: 100%; box-sizing: border-box; border-top: 5px solid #0d6efd; }
-        h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 15px; color: #1c1e21; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes zoomIn { from { transform: scale(0.9); } to { transform: scale(1); } }
+
+        /* --- Basic Styling --- */
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: #e9ebee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 35px 45px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 480px;
+            width: 100%;
+            box-sizing: border-box;
+            border-top: 5px solid #0d6efd;
+        }
+        h1 { font-size: 1.6rem; margin-bottom: 15px; color: #1c1e21; }
         .subtitle { font-size: 1rem; color: #606770; margin-bottom: 30px; }
         #ad-placeholder { margin: 30px 0; min-height: 90px; display: flex; justify-content: center; align-items: center; }
         .progress-bar-container { width: 100%; height: 8px; background-color: #e9ebee; border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
@@ -18,83 +43,100 @@
         #countdown { font-weight: 700; font-size: 1.4rem; color: #0d6efd; }
         #continueBtn { width: 100%; padding: 14px 20px; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(13, 110, 253, 0.2); }
         #continueBtn:enabled { background-color: #0d6efd; color: #ffffff; }
-        #continueBtn:enabled:hover { background-color: #0b5ed7; transform: translateY(-2px); }
         #continueBtn:disabled { background-color: #e4e6eb; color: #8d949e; cursor: not-allowed; opacity: 0.8; }
-        .error-message { color: #d93025; font-weight: bold; }
-
-        /* --- STYLING FOR NEW SECTIONS --- */
-        .donation-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ebee; }
+        .support-link { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ebee; }
         #show-qr-btn { color: #0d6efd; cursor: pointer; text-decoration: none; font-size: 0.9rem; font-weight: bold; }
-        #show-qr-btn:hover { text-decoration: underline; }
-        #qr-code-container { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.6s ease-in-out; }
-        #qr-code-container.visible { max-height: 200px; opacity: 1; } /* 200px height for animation */
-        .donation-section img { width: 150px; height: 150px; margin-top: 15px; border-radius: 8px; }
-
-        .brand-footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid #e9ebee; }
+        .brand-footer { margin-top: 20px; }
         .brand-footer a { font-size: 1rem; color: #8a919c; text-decoration: none; font-weight: bold; transition: color 0.2s; }
         .brand-footer a:hover { color: #1c1e21; }
+
+        /* --- STYLING FOR NEW QR MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.visible {
+            display: flex;
+            opacity: 1;
+            animation: fadeIn 0.3s;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            animation: zoomIn 0.3s;
+        }
+        .modal-content img { width: 200px; height: 200px; border-radius: 8px; }
+        .modal-content p { font-size: 1rem; color: #333; margin-top: 0; }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-btn:hover { color: #333; }
     </style>
 </head>
 <body>
     <!-- Popunder Ads Code -->
     <script type="text/javascript">
-	atOptions = {
-		'key' : '590947d1a5116719277025828551737f',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
+        atOptions = {
+            'key' : '590947d1a5116719277025828551737f',
+            'format' : 'iframe',
+            'height' : 50,
+            'width' : 320,
+            'params' : {}
+        };
     </script>
     <script type="text/javascript" src="//www.topcreativeformat.com/590947d1a5116719277025828551737f/invoke.js"></script>
     
     <div class="container">
-        <div id="content-wrapper">
-            <h1>Your Link is Almost Ready!</h1>
-            <p class="subtitle">Please wait while we securely connect you to your video.</p>
-            
-            <div id="ad-placeholder">
-                <!-- Banner Ad Code -->
-                <script type="text/javascript">
-                    atOptions = {
-                        'key' : '04ff74efe54518f3dda7ff451e507459',
-                        'format' : 'iframe',
-                        'height' : 90,
-                        'width' : 728,
-                        'params' : {}
-                    };
-                </script>
-                <script type="text/javascript" src="//www.highperformanceformat.com/04ff74efe54518f3dda7ff451e507459/invoke.js"></script>
-            </div>
-            
-            <div class="progress-bar-container">
-                <div class="progress-bar"></div>
-            </div>
+        <!-- Main Content -->
+        <h1>Your Link is Almost Ready!</h1>
+        <p class="subtitle">Please wait while we securely connect you.</p>
+        <div id="ad-placeholder">
+            <!-- Banner Ad Code -->
+            <script type="text/javascript">
+                atOptions = { 'key' : '04ff74efe54518f3dda7ff451e507459', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/04ff74efe54518f3dda7ff451e507459/invoke.js"></script>
+        </div>
+        <div class="progress-bar-container"><div class="progress-bar"></div></div>
+        <p class="countdown-text" id="countdown-message">Redirecting in <span id="countdown">10</span> seconds...</p>
+        <button id="continueBtn" disabled>Please wait...</button>
+        <div class="support-link">
+            <a href="#" id="show-qr-btn">Want to support me? Click here</a>
+        </div>
+        <div class="brand-footer">
+            <a href="https://t.me/kundan_yadav_bot" target="_blank">Developer💀:-𝕂𝕦𝕟𝕕𝕒𝕟 𝕐𝕒𝕕𝕒𝕧 😎</a>
+        </div>
+    </div>
 
-            <p class="countdown-text" id="countdown-message">
-                Redirecting in <span id="countdown">10</span> seconds...
-            </p>
-            
-            <button id="continueBtn" disabled>Please wait...</button>
-
-            <!-- ============================================= -->
-            <!-- === UPDATED DONATION SECTION === -->
-            <!-- ============================================= -->
-            <div class="donation-section">
-                <a href="#" id="show-qr-btn">Want to support me? Click here</a>
-                <div id="qr-code-container">
-                    <img src="https://s.tfrbot.com/h/57sb0L" alt="UPI QR Code">
-                    <p style="font-size: 0.8rem; color: #8a919c; margin-top: 5px;">Scan to pay via UPI</p>
-                </div>
-            </div>
-
-            <!-- ============================================= -->
-            <!-- === NEW BRAND FOOTER === -->
-            <!-- ============================================= -->
-            <div class="brand-footer">
-                <a href="https://t.me/kundan_yadav_bot" target="_blank">𝕂𝕦𝕟𝕕𝕒𝕟 𝕐𝕒𝕕𝕒𝕧 😎</a>
-            </div>
-
+    <!-- ============================================= -->
+    <!-- === NEW QR CODE MODAL (POPUP) HTML === -->
+    <!-- ============================================= -->
+    <div class="modal-overlay" id="qr-modal-overlay">
+        <div class="modal-content">
+            <span class="close-btn" id="close-qr-btn">&times;</span>
+            <p><strong>Support me directly!</strong></p>
+            <img src="https://s.tfrbot.com/h/57sb0L" alt="UPI QR Code">
+            <p style="font-size: 0.9rem; color: #888; margin-top: 10px;">Scan to pay via UPI</p>
         </div>
     </div>
 
@@ -105,25 +147,20 @@
             const urlParams = new URLSearchParams(window.location.search);
             const redirectUrl = urlParams.get('url');
 
-            // --- Elements for new features ---
+            // --- Elements for new QR Modal ---
             const showQrBtn = document.getElementById('show-qr-btn');
-            const qrContainer = document.getElementById('qr-code-container');
+            const qrModalOverlay = document.getElementById('qr-modal-overlay');
+            const closeQrBtn = document.getElementById('close-qr-btn');
 
             if (!redirectUrl) {
-                document.getElementById('content-wrapper').innerHTML = `<h1 class='error-message'>Error: Destination URL not found.</h1><p>Please make sure the link is correct.</p>`;
+                document.querySelector('.container').innerHTML = `<h1 style="color: #d93025;">Error: Destination URL not found.</h1><p>Please make sure the link is correct.</p>`;
                 return;
             }
 
+            // --- Countdown and Redirect Logic ---
             let countdown = 10;
             countdownElement.textContent = countdown;
-            
-            setTimeout(() => {
-                 if(countdown > 0){
-                    continueBtn.disabled = false;
-                    continueBtn.textContent = 'Continue Now';
-                 }
-            }, 8000);
-
+            setTimeout(() => { if(countdown > 0) { continueBtn.disabled = false; continueBtn.textContent = 'Continue Now'; } }, 8000);
             const timer = setInterval(() => {
                 countdown--;
                 countdownElement.textContent = countdown;
@@ -135,17 +172,45 @@
                     window.location.href = redirectUrl;
                 }
             }, 1000);
+            continueBtn.addEventListener('click', () => { if (!continueBtn.disabled) { window.location.href = redirectUrl; } });
 
-            continueBtn.addEventListener('click', () => {
-                if (!continueBtn.disabled) { window.location.href = redirectUrl; }
-            });
+            // --- HISTORY API & MODAL LOGIC ---
+            function openModal() {
+                qrModalOverlay.classList.add('visible');
+                // Add a state to browser history
+                history.pushState({modal: 'qr'}, 'Support Me', '#qr');
+            }
 
-            // --- Logic for showing QR Code ---
+            function closeModal() {
+                qrModalOverlay.classList.remove('visible');
+            }
+
+            // Open modal on click
             showQrBtn.addEventListener('click', (event) => {
-                event.preventDefault(); // Prevents page from jumping to top
-                qrContainer.classList.add('visible');
-                showQrBtn.style.display = 'none'; // Hide the link after click
+                event.preventDefault();
+                openModal();
             });
+
+            // Close modal with close button
+            closeQrBtn.addEventListener('click', () => {
+                // Go back in history to close the modal and remove #qr from URL
+                history.back();
+            });
+
+            // Close modal if user clicks on the dark overlay
+            qrModalOverlay.addEventListener('click', (event) => {
+                if (event.target === qrModalOverlay) {
+                    history.back();
+                }
+            });
+
+            // Listen for browser's back button press
+            window.onpopstate = function(event) {
+                // If the state is related to our modal, close it
+                if (qrModalOverlay.classList.contains('visible')) {
+                    closeModal();
+                }
+            };
         });
     </script>
 </body>
