@@ -3,50 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
+    <title>Please Wait...</title>
     <style>
-        /* --- Basic Reset & Styling --- */
+        /* --- Google Font for a cleaner look --- */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        /* --- Keyframes for the progress bar animation --- */
+        @keyframes progress-animation {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        /* --- Basic Reset & Upgraded Styling --- */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f0f2f5;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: #e9ebee; /* Lighter, cleaner background */
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 15px;
+            padding: 20px;
             color: #333;
             box-sizing: border-box;
         }
 
-        /* --- Main Container Box --- */
         .container {
             background-color: #ffffff;
-            padding: 30px 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 35px 45px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
             text-align: center;
-            max-width: 450px;
+            max-width: 480px;
             width: 100%;
             box-sizing: border-box;
+            border-top: 5px solid #0d6efd;
         }
 
         h1 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 15px;
             color: #1c1e21;
         }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #606770;
+            margin-bottom: 30px;
+        }
         
-        /* --- Ad Placeholder Styling --- */
         #ad-placeholder {
-            margin: 25px 0;
-            min-height: 50px; /* Ad ke liye jagah banaye rakhta hai */
+            margin: 30px 0;
+            min-height: 90px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* --- Countdown & Button Styling --- */
+        /* --- Progress Bar Styling --- */
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e9ebee;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #0d6efd;
+            border-radius: 4px;
+            animation: progress-animation 10s linear forwards; /* Animation duration matches countdown */
+        }
+
         .countdown-text {
             font-size: 1.1rem;
             margin-bottom: 25px;
@@ -54,31 +85,31 @@
         }
 
         #countdown {
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 1.4rem;
             color: #0d6efd;
         }
 
         #continueBtn {
             width: 100%;
-            padding: 12px 20px;
-            font-size: 1rem;
+            padding: 14px 20px;
+            font-size: 1.1rem;
             font-weight: bold;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.2s ease, opacity 0.2s ease;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.2);
         }
 
-        /* --- Button States --- */
         #continueBtn:enabled {
             background-color: #0d6efd;
             color: #ffffff;
         }
-
         #continueBtn:enabled:hover {
             background-color: #0b5ed7;
+            transform: translateY(-2px);
         }
-        
         #continueBtn:disabled {
             background-color: #e4e6eb;
             color: #8d949e;
@@ -90,80 +121,58 @@
             color: #d93025;
             font-weight: bold;
         }
-
-        /* --- Donation Section Styling --- */
         .donation-section {
             margin-top: 30px;
             padding-top: 20px;
             border-top: 1px solid #e9ebee;
-            text-align: center;
-        }
-
-        .donation-section p {
-            margin: 0;
-            font-size: 0.9rem;
-            color: #606770;
-        }
-
-        .donation-section img {
-            width: 150px;
-            height: 150px;
-            margin-top: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .donation-section .upi-text {
-            font-size: 0.8rem;
-            color: #8a919c;
-            margin-top: 5px;
         }
     </style>
 </head>
 <body>
-
-	<!-- Popender ads -->
-	
-	
-	<div class="container">
-        <div id="content-wrapper">
-            <h1>Redirecting to your video...</h1>
-            
-            <!-- 
-                ================================================
-                === APNA AD NETWORK KA CODE YAHAN PASTE KAREIN ===
-                ================================================
-            -->
-            <div id="ad-placeholder">
-                <!-- Example: Adsterra/PropellerAds ka code yahan aayega -->
-                <script type="text/javascript">
+    <!-- Popunder Ads Code can be placed right after the body tag -->
+    <script type="text/javascript">
 	atOptions = {
-		'key' : '04ff74efe54518f3dda7ff451e507459',
+		'key' : '590947d1a5116719277025828551737f',
 		'format' : 'iframe',
-		'height' : 90,
-		'width' : 728,
+		'height' : 50,
+		'width' : 320,
 		'params' : {}
 	};
 </script>
-<script type="text/javascript" src="//www.highperformanceformat.com/04ff74efe54518f3dda7ff451e507459/invoke.js"></script>
+<script type="text/javascript" src="//www.topcreativeformat.com/590947d1a5116719277025828551737f/invoke.js"></script>
+    
+    <div class="container">
+        <div id="content-wrapper">
+            <h1>Your Link is Almost Ready!</h1>
+            <p class="subtitle">Please wait while we securely connect you to your video.</p>
+            
+            <div id="ad-placeholder">
+                <script type="text/javascript">
+                    atOptions = {
+                        'key' : '04ff74efe54518f3dda7ff451e507459',
+                        'format' : 'iframe',
+                        'height' : 90,
+                        'width' : 728,
+                        'params' : {}
+                    };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/04ff74efe54518f3dda7ff451e507459/invoke.js"></script>
             </div>
             
+            <div class="progress-bar-container">
+                <div class="progress-bar"></div>
+            </div>
+
             <p class="countdown-text" id="countdown-message">
-                Please wait <span id="countdown">5</span> seconds to continue.
+                Redirecting in <span id="countdown">10</span> seconds...
             </p>
             
             <button id="continueBtn" disabled>Please wait...</button>
 
-            <!-- ============================================= -->
-            <!-- === DONATION / UPI QR CODE SECTION START === -->
-            <!-- ============================================= -->
             <div class="donation-section">
-                <p>Enjoying the service? Support me directly!</p>
-                <img src="https://s.tfrbot.com/h/57sb0L" alt="UPI QR Code">
-                <p class="upi-text">Scan to pay via UPI</p>
+                <p style="font-size: 0.9rem; color: #606770;">Enjoying the service? Support me directly!</p>
+                <img src="https://s.tfrbot.com/h/57sb0L" alt="UPI QR Code" style="width: 150px; height: 150px; margin-top: 15px; border-radius: 8px;">
             </div>
-            <!-- === DONATION / UPI QR CODE SECTION END === -->
-
         </div>
     </div>
 
@@ -177,28 +186,39 @@
             const redirectUrl = urlParams.get('url');
 
             if (!redirectUrl) {
-                contentWrapper.innerHTML = `
-                    <h1 class='error-message'>Error: Destination URL not found.</h1>
-                    <p>Please make sure the link is correct.</p>
-                `;
+                contentWrapper.innerHTML = `<h1 class='error-message'>Error: Destination URL not found.</h1><p>Please make sure the link is correct.</p>`;
                 return;
             }
 
-            let countdown = 5;
+            let countdown = 10; // Timer set to 10 seconds
             countdownElement.textContent = countdown;
+            
+            // Enable button after 5 seconds for impatient users
+            setTimeout(() => {
+                 if(countdown > 0){
+                    continueBtn.disabled = false;
+                    continueBtn.textContent = 'Continue Now';
+                 }
+            }, 5000);
 
             const timer = setInterval(() => {
                 countdown--;
                 countdownElement.textContent = countdown;
 
                 if (countdown <= 0) {
-                    clearInterval(timer);
-                    countdownMessage.innerHTML = "You can now proceed to your video.";
-                    continueBtn.disabled = false;
-                    continueBtn.textContent = 'Continue to Video';
+                    clearInterval(timer); // Stop the timer
+                    
+                    // Update UI to show redirection is happening
+                    countdownMessage.innerHTML = "Redirecting you now...";
+                    continueBtn.disabled = true;
+                    continueBtn.textContent = 'Redirecting...';
+                    
+                    // --- AUTOMATIC REDIRECT ---
+                    window.location.href = redirectUrl;
                 }
             }, 1000);
 
+            // Button click still works for users who want to click it
             continueBtn.addEventListener('click', () => {
                 if (!continueBtn.disabled) {
                     window.location.href = redirectUrl;
