@@ -44,8 +44,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Optional: Ad area ko dekhne ke liye border */
-            /* border: 1px dashed #ddd; */
         }
 
         /* --- Countdown & Button Styling --- */
@@ -92,6 +90,34 @@
             color: #d93025;
             font-weight: bold;
         }
+
+        /* --- Donation Section Styling --- */
+        .donation-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ebee;
+            text-align: center;
+        }
+
+        .donation-section p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #606770;
+        }
+
+        .donation-section img {
+            width: 150px;
+            height: 150px;
+            margin-top: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .donation-section .upi-text {
+            font-size: 0.8rem;
+            color: #8a919c;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -102,11 +128,11 @@
             
             <!-- 
                 ================================================
-                === APNA AD NETWORK KA CODE (ADSTERRA/PROPELLERADS) YAHAN PASTE KAREIN ===
+                === APNA AD NETWORK KA CODE YAHAN PASTE KAREIN ===
                 ================================================
             -->
             <div id="ad-placeholder">
-                <!-- Example: <script type="text/javascript" src="//adnetwork.com/code.js"></script> -->
+                <!-- Example: Adsterra/PropellerAds ka code yahan aayega -->
             </div>
             
             <p class="countdown-text" id="countdown-message">
@@ -114,6 +140,17 @@
             </p>
             
             <button id="continueBtn" disabled>Please wait...</button>
+
+            <!-- ============================================= -->
+            <!-- === DONATION / UPI QR CODE SECTION START === -->
+            <!-- ============================================= -->
+            <div class="donation-section">
+                <p>Enjoying the service? Support me directly!</p>
+                <img src="https://s.tfrbot.com/h/57sb0L" alt="UPI QR Code">
+                <p class="upi-text">Scan to pay via UPI</p>
+            </div>
+            <!-- === DONATION / UPI QR CODE SECTION END === -->
+
         </div>
     </div>
 
@@ -123,13 +160,9 @@
             const continueBtn = document.getElementById('continueBtn');
             const countdownMessage = document.getElementById('countdown-message');
             const contentWrapper = document.getElementById('content-wrapper');
-
-            // 1. URL se target link ('url' parameter) nikalein.
-            // URLSearchParams aate hue link ko automatically decode kar deta hai.
             const urlParams = new URLSearchParams(window.location.search);
             const redirectUrl = urlParams.get('url');
 
-            // Agar 'url' parameter na mile to error dikhayein
             if (!redirectUrl) {
                 contentWrapper.innerHTML = `
                     <h1 class='error-message'>Error: Destination URL not found.</h1>
@@ -138,7 +171,6 @@
                 return;
             }
 
-            // 2. Countdown ka logic
             let countdown = 5;
             countdownElement.textContent = countdown;
 
@@ -147,31 +179,19 @@
                 countdownElement.textContent = countdown;
 
                 if (countdown <= 0) {
-                    clearInterval(timer); // Timer rokein
-
-                    // 3. Button ko enable karein aur text badlein
+                    clearInterval(timer);
                     countdownMessage.innerHTML = "You can now proceed to your video.";
                     continueBtn.disabled = false;
                     continueBtn.textContent = 'Continue to Video';
                 }
-            }, 1000); // Har 1 second mein chalega
+            }, 1000);
 
-            // 4. Button par click karne se redirect karein
             continueBtn.addEventListener('click', () => {
-                // Check karein ki button enabled hai ya nahi
                 if (!continueBtn.disabled) {
                     window.location.href = redirectUrl;
                 }
             });
         });
-
-        <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center;">
-    <p style="font-size: 0.9rem; color: #555;">Tired of ads? You can support me directly!</p>
-    <img src="https://s.tfrbot.com/h/57sb0L" alt="UPI QR Code" style="width: 150px; height: 150px; margin-top: 10px; border-radius: 8px;">
-    <p style="font-size: 0.8rem; color: #777; margin-top: 5px;">Scan to pay via UPI</p>
-
-            
-            </div>
     </script>
 </body>
 </html>
