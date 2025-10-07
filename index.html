@@ -221,9 +221,9 @@ a:hover {
             }
 
             // --- Countdown and Redirect Logic ---
-            let countdown = 10;
+            let countdown = 6;
             countdownElement.textContent = countdown;
-            setTimeout(() => { if(countdown > 0) { continueBtn.disabled = false; continueBtn.textContent = 'Continue Now'; } }, 8000);
+            setTimeout(() => { if(countdown > 0) { continueBtn.disabled = false; continueBtn.textContent = 'Continue Now'; } }, 5000);
             const timer = setInterval(() => {
                 countdown--;
                 countdownElement.textContent = countdown;
