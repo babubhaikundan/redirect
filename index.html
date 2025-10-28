@@ -216,29 +216,83 @@
             h1 { font-size: 1.8rem; }
         }
 
-        /* --- Footer Branding --- */
-        .brand-footer { margin-top: 20px; }
-        .brand-footer a {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--footer-bg);
-            padding: 6px 12px;
-            border-radius: 12px;
-            text-decoration: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-        .brand-footer a:hover {
-            transform: scale(1.05);
-            background: var(--footer-hover-bg);
-        }
-        .brand-footer a img { width: 18px; height: 18px; }
-        .brand-footer a span:first-of-type { color: #00ffc8; font-weight: bold; font-size: 15px; }
-        .brand-footer a span:last-of-type { color: #FFD700; font-size: 15px; font-weight: bold; }
-        .brand-footer a span:last-of-type img { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
-    </style>
+ <style>
+    /* --- Main wrapper --- */
+    .bawal-footer-wrapper {
+        text-align: center; 
+        margin-top: 30px; 
+        margin-bottom: 9px; 
+        padding-top: 20px; 
+        border-top: 1px solid #444; /* Border color thoda dark kiya */
+        position: relative;
+        z-index: 10;
+    }
+
+    /* --- Link button --- */
+    .bawal-footer-link {
+        display: inline-flex; 
+        align-items: center; 
+        gap: 8px; 
+        background: #1A1A1A; /* Darker background */
+        padding: 10px 18px; /* Thodi padding badhayi */
+        border-radius: 25px; /* Thoda aur rounded */
+        text-decoration: none; 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border */
+        
+        /* --- 🌟 YEH HAI ASLI ANIMATION --- */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* --- 🌟 HOVER EFFECT --- */
+    .bawal-footer-link:hover {
+        /* (1) Lift & Scale effect */
+        transform: translateY(-5px) scale(1.03); 
+        
+        /* (2) Neon Glow effect */
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4), 
+                    0 0 20px rgba(0, 255, 200, 0.4), /* Neon glow (color #00ffc8 se match) */
+                    0 0 30px rgba(0, 255, 200, 0.2);
+    }
+
+    /* --- Text styles --- */
+    .bawal-footer-link .dev-text {
+        color: #00ffc8; 
+        font-weight: bold; 
+        font-size: 15px;
+        /* Text ko glow diya */
+        text-shadow: 0 0 5px rgba(0, 255, 200, 0.5);
+    }
+    
+    .bawal-footer-link .name-text {
+        display: flex; 
+        align-items: center; 
+        gap: 5px; 
+        color: #FFD700; 
+        font-size: 15px; 
+        font-weight: bold;
+        /* Text ko glow diya */
+        text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+    }
+
+    /* --- Icon styles --- */
+    .bawal-footer-link img {
+        width: 22px; 
+        height: 22px;
+        border-radius: 50%;
+        transition: transform 0.3s ease; /* Animation ke liye transition */
+    }
+
+    /* --- 🌟 (3) ICON ANIMATION --- */
+    .bawal-footer-link:hover .telegram-icon {
+        transform: rotate(360deg); /* Telegram icon pura ghumega */
+    }
+    
+    .bawal-footer-link:hover .profile-pic {
+        transform: scale(1.15) rotate(-10deg); /* Profile pic tilt aur scale hogi */
+    }
+
+</style>
 </head>
 <body>
     <!-- Popunder Ads Code -->
@@ -279,20 +333,21 @@
             <a href="#" id="show-qr-btn">Want to support me? Click here</a>
         </div>
         
-        <!-- Compact Footer with Kundan Image START -->
-        <div class="brand-footer">
-            <a href="https://babubhaikundan.blogspot.com" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
-                <span>Developer💀:-</span>
-                <span>
-                    𝕂𝕦𝕟𝕕𝕒𝕟 𝕐𝕒𝕕𝕒𝕧
-                    <img src="https://s.tfrbot.com/h/gL5VTi" alt="𝕂𝕦𝕟𝕕𝕒𝕟 𝕐𝕒𝕕𝕒𝕧">
-                </span>
-            </a>
-        </div>
-        <!-- Compact Footer with Kundan Image END -->
-    </div>
+        
 
+<div class="bawal-footer-wrapper">
+    <a href="https://babubhaikundan.blogspot.com" target="_blank" class="bawal-footer-link">
+        
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" class="telegram-icon">
+        
+        <span class="dev-text">Developer💀:-</span>
+        
+        <span class="name-text">
+            𝕂𝕦𝕟𝕕𝕒𝕟 𝕐𝕒𝕕𝕒𝕧 
+            <img src="https://s.tfrbot.com/h/gL5VTi" alt="Kundan" class="profile-pic">
+        </span>
+    </a>
+</div>
     <!-- ============================================= -->
     <!-- === NEW QR CODE MODAL (POPUP) HTML === -->
     <!-- ============================================= -->
