@@ -22,6 +22,12 @@
             --modal-overlay-bg: rgba(0, 0, 0, 0.7);
             --footer-bg: #1a1a1a;
             --footer-hover-bg: #2a2a2a;
+
+            /* --- Drawer Menu CSS Variables --- */
+            --drawer-text-color: #f5f5ff;
+            --drawer-primary-color: #00ffc8;
+            --drawer-bg-color: linear-gradient(180deg, rgba(10, 20, 35, .9), rgba(5, 10, 15, .85));
+            --drawer-link-hover-bg: rgba(0, 255, 200, .08);
         }
 
         [data-theme="dark"] {
@@ -50,6 +56,7 @@
             font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background-color: var(--bg-color);
             display: flex;
+            flex-direction: column; 
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -68,8 +75,10 @@
             width: 100%;
             box-sizing: border-box;
             border-top: 5px solid var(--primary-color);
-            position: relative; /* For theme toggle positioning */
+            position: relative; 
             animation: fadeIn 0.6s ease-out;
+            margin-bottom: 20px; 
+            z-index: 10; /* Taaki drawer ke upar na aaye */
         }
         h1 { font-size: 1.6rem; margin-bottom: 15px; color: var(--text-color); }
         .subtitle { font-size: 1rem; color: var(--subtitle-color); margin-bottom: 30px; }
@@ -216,86 +225,199 @@
             h1 { font-size: 1.8rem; }
         }
 
- <style>
-    /* --- Main wrapper --- */
-    .bawal-footer-wrapper {
-        text-align: center; 
-        margin-top: 20px; 
-        margin-bottom: 1px; 
-        padding-top: 12px; 
-        border-top: 1px solid #444; /* Border color thoda dark kiya */
-        position: relative;
-        z-index: 10;
-    }
+        /* --- === START: INJECTED DRAWER MENU CSS === --- */
+        .drawer-toggle {
+            position: fixed;
+            top: 18px;
+            left: 15px;
+            z-index: 1100;
+            background: 0 0;
+            border: none;
+            width: 35px;
+            height: 27px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            box-sizing: content-box;
+            transition: transform .4s ease, opacity .4s ease
+        }
+        .drawer-toggle.hidden {
+            transform: translateY(-100px);
+            opacity: 0;
+            pointer-events: none
+        }
+    .drawer-toggle span{height:5px;background:var(--text-color);border-radius:3px;display:block;transition:all .25s}
 
-    /* --- Link button --- */
-    .bawal-footer-link {
-        display: inline-flex; 
-        align-items: center; 
-        gap: 8px; 
-        background: #1A1A1A; /* Darker background */
-        padding: 10px 18px; /* Thodi padding badhayi */
-        border-radius: 25px; /* Thoda aur rounded */
-        text-decoration: none; 
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border */
-        
-        /* --- 🌟 YEH HAI ASLI ANIMATION --- */
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+        .drawer-toggle.active span:nth-child(1) {
+            transform: translateY(10px) rotate(45deg)
+        }
+        .drawer-toggle.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(.2)
+        }
+        .drawer-toggle.active span:nth-child(3) {
+            transform: translateY(-10px) rotate(-45deg)
+        }
+        .drawer-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 220px;
+            padding-top: 90px;
+            z-index: 1050;
+            background: var(--drawer-bg-color);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transform: translateX(-110%);
+            transition: transform .45s cubic-bezier(.2, 1, .3, 1);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            box-sizing: border-box
+        }
+        .drawer-nav.active {
+            transform: translateX(0)
+        }
+        .drawer-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left
+        }
+        .drawer-nav a {
+            display: block;
+            padding: 16px 25px;
+            color: var(--drawer-text-color, #f5f5f5);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: color .2s ease, background .2s ease
+        }
+        .drawer-nav a:hover {
+            color: var(--drawer-primary-color, #00ffc8);
+            background: var(--drawer-link-hover-bg)
+        }
+        .drawer-nav li {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .3s ease, transform .3s ease
+        }
+        .drawer-nav.active li {
+            opacity: 1;
+            transform: translateY(0)
+        }
+        .drawer-nav.active li:nth-child(1) {
+            transition-delay: .1s
+        }
+        .drawer-nav.active li:nth-child(2) {
+            transition-delay: .15s
+        }
+        .drawer-nav.active li:nth-child(3) {
+            transition-delay: .2s
+        }
+        .drawer-nav.active li:nth-child(4) {
+            transition-delay: .25s
+        }
+        .drawer-nav.active li:nth-child(5) {
+            transition-delay: .3s
+        }
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            z-index: 1040;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .4s ease, visibility .4s ease
+        }
+        .drawer-overlay.active {
+            opacity: 1;
+            visibility: visible
+        }
+        @media (max-width:520px) {
+            .drawer-nav {
+                width: 70%
+            }
+        }
+        /* --- === END: INJECTED DRAWER MENU CSS === --- */
 
-    /* --- 🌟 HOVER EFFECT --- */
-    .bawal-footer-link:hover {
-        /* (1) Lift & Scale effect */
-        transform: translateY(-5px) scale(1.03); 
-        
-        /* (2) Neon Glow effect */
-        box-shadow: 0 10px 25px rgba(0,0,0,0.4), 
-                    0 0 20px rgba(0, 255, 200, 0.4), /* Neon glow (color #00ffc8 se match) */
-                    0 0 30px rgba(0, 255, 200, 0.2);
-    }
 
-    /* --- Text styles --- */
-    .bawal-footer-link .dev-text {
-        color: #00ffc8; 
-        font-weight: bold; 
-        font-size: 12px;
-        /* Text ko glow diya */
-        text-shadow: 0 0 5px rgba(0, 255, 200, 0.5);
-    }
-    
-    .bawal-footer-link .name-text {
-        display: flex; 
-        align-items: center; 
-        gap: 5px; 
-        color: #FFD700; 
-        font-size: 12px; 
-        font-weight: bold;
-        /* Text ko glow diya */
-        text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
-    }
-
-    /* --- Icon styles --- */
-    .bawal-footer-link img {
-        width: 18px; 
-        height: 18px;
-        border-radius: 50%;
-        transition: transform 0.3s ease; /* Animation ke liye transition */
-    }
-
-    /* --- 🌟 (3) ICON ANIMATION --- */
-    .bawal-footer-link:hover .telegram-icon {
-        transform: rotate(360deg); /* Telegram icon pura ghumega */
-    }
-    
-    .bawal-footer-link:hover .profile-pic {
-        transform: scale(1.15) rotate(-10deg); /* Profile pic tilt aur scale hogi */
-    }
+        /* --- === START: INJECTED FOOTER CSS === --- */
+        .bawal-footer-wrapper{
+            text-align:center;
+            margin-bottom:9px;
+            padding-top:20px;
+            border-top:1px solid var(--border-color); 
+            position:relative;
+            z-index:10;
+            width: 100%;
+            max-width: 700px; 
+            box-sizing: border-box;
+            padding-left: 20px; 
+            padding-right: 20px; 
+        }
+        .bawal-footer-link{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            background:#1A1A1A;
+            padding:10px 18px;
+            border-radius:25px;
+            text-decoration:none;
+            box-shadow:0 4px 10px rgba(0,0,0,.3);
+            border:1px solid rgba(255,255,255,.05);
+            transition:transform .3s ease,box-shadow .3s ease
+        }
+        .bawal-footer-link:hover{
+            transform:translateY(-5px) scale(1.03);
+            box-shadow:0 10px 25px rgba(0,0,0,.4),0 0 20px rgba(0,255,200,.4),0 0 30px rgba(0,255,200,.2)
+        }
+        .bawal-footer-link .dev-text{
+            color:#00ffc8;
+            font-weight:bold;
+            font-size:15px;
+            text-shadow:0 0 5px rgba(0,255,200,.5)
+        }
+        .bawal-footer-link .name-text{
+            display:flex;
+            align-items:center;
+            gap:5px;
+            color:#FFD700;
+            font-size:15px;
+            font-weight:bold;
+            text-shadow:0 0 5px rgba(255,215,0,.5)
+        }
+        .bawal-footer-link img{
+            width:22px;
+            height:22px;
+            border-radius:50%;
+            transition:transform .3s ease
+        } 
+        .bawal-footer-link:hover .telegram-icon{
+            transform:rotate(360deg)
+        }
+        .bawal-footer-link:hover .profile-pic{
+            transform:scale(1.15) rotate(-10deg)
+        }
+        /* --- === END: INJECTED FOOTER CSS === --- */
 
 </style>
 </head>
 <body>
-    <!-- Popunder Ads Code -->
+
+    <div class="drawer-overlay" id="drawer-overlay" title="Close menu"></div>
+    <button class="drawer-toggle" id="drawer-toggle" aria-label="Menu Kholo" title="Menu Kholo" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <nav class="drawer-nav" id="drawer-nav" aria-hidden="true">
+        <ul>
+            <li><a href="https://babubhaikundan.blogspot.com" target="_blank" rel="noopener noreferrer">🤔 About</a></li>
+            <li><a href="https://t.me/kundan_yadav_bot" target="_blank" rel="noopener noreferrer">📞 Contact</a></li>
+            <li><a href="https://www.instagram.com/babubhaikundan" target="_blank" rel="noopener noreferrer">💥 Instagram</a></li>
+        </ul>
+    </nav>
     <script type="text/javascript">
         atOptions = {
             'key' : '590947d1a5116719277025828551737f',
@@ -308,7 +430,6 @@
     <script type="text/javascript" src="//www.topcreativeformat.com/590947d1a5116719277025828551737f/invoke.js"></script>
     
     <div class="container">
-        <!-- Theme Toggle -->
         <div class="theme-switch-wrapper">
             <label class="theme-switch" for="checkbox">
                 <input type="checkbox" id="checkbox" />
@@ -316,11 +437,9 @@
             </label>
         </div>
 
-        <!-- Main Content -->
         <h1>Your Link is Almost Ready!</h1>
         <p class="subtitle">Please wait while we securely connect you.</p>
         <div id="ad-placeholder">
-            <!-- Banner Ad Code -->
             <script type="text/javascript">
                 atOptions = { 'key' : '04ff74efe54518f3dda7ff451e507459', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
             </script>
@@ -332,25 +451,13 @@
         <div class="support-link">
             <a href="#" id="show-qr-btn">Want to support me? Click here</a>
         </div>
-        
-        
-
-<div class="bawal-footer-wrapper">
-    <a href="https://babubhaikundan.blogspot.com" target="_blank" class="bawal-footer-link">
-        
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" class="telegram-icon">
-        
-        <span class="dev-text">Developer💀:-</span>
-        
-        <span class="name-text">
-            𝕂𝕦𝕟𝕕𝕒𝕟 𝕐𝕒𝕕𝕒𝕧 
-            <img src="https://s.tfrbot.com/h/gL5VTi" alt="Kundan" class="profile-pic">
-        </span>
-    </a>
-</div>
-    <!-- ============================================= -->
-    <!-- === NEW QR CODE MODAL (POPUP) HTML === -->
-    <!-- ============================================= -->
+    </div> <div class="bawal-footer-wrapper">
+        <a href="https://babubhaikundan.blogspot.com" target="_blank" class="bawal-footer-link">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" class="telegram-icon">
+            <span class="dev-text">Developer💀:-</span>
+            <span class="name-text">𝕂𝕦𝕟𝕕𝕒𝕟 𝕐𝕒𝕕𝕒𝕧 <img src="https://s.tfrbot.com/h/gL5VTi" alt="Kundan" class="profile-pic"></span>
+        </a>
+    </div>
     <div class="modal-overlay" id="qr-modal-overlay">
         <div class="modal-content">
             <span class="close-btn" id="close-qr-btn">&times;</span>
@@ -361,7 +468,9 @@
     </div>
 
     <script>
+        // Sab kuch DOM ready hone ke baad run hoga
         document.addEventListener('DOMContentLoaded', () => {
+
             // --- Theme Toggle Logic ---
             const toggleSwitch = document.querySelector('#checkbox');
             const currentTheme = localStorage.getItem('theme');
@@ -385,23 +494,31 @@
 
             toggleSwitch.addEventListener('change', switchTheme, false);
 
-            // --- Original Countdown and Redirect Logic ---
+            // --- Countdown and Redirect Logic ---
             const countdownElement = document.getElementById('countdown');
             const continueBtn = document.getElementById('continueBtn');
             const urlParams = new URLSearchParams(window.location.search);
             const redirectUrl = urlParams.get('url');
-
-            // --- Elements for new QR Modal ---
+            
+            // --- Elements for QR Modal ---
             const showQrBtn = document.getElementById('show-qr-btn');
             const qrModalOverlay = document.getElementById('qr-modal-overlay');
             const closeQrBtn = document.getElementById('close-qr-btn');
 
             if (!redirectUrl) {
                 document.querySelector('.container').innerHTML = `<h1 style="color: #d93025;">Error: Destination URL not found.</h1><p>Please make sure the link is correct.</p>`;
-                return;
+                // Hide footer if there's an error
+                const footer = document.querySelector('.bawal-footer-wrapper');
+                if(footer) footer.style.display = 'none';
+                
+                // Hide drawer toggle if error
+                const drawerBtn = document.getElementById('drawer-toggle');
+                if(drawerBtn) drawerBtn.style.display = 'none';
+
+                return; // Baaki ka JS run nahi hoga agar URL nahi hai
             }
 
-            // --- Countdown and Redirect Logic ---
+            // --- Countdown and Redirect Logic (Only if URL exists) ---
             let countdown = 6;
             countdownElement.textContent = countdown;
             setTimeout(() => { if(countdown > 0) { continueBtn.disabled = false; continueBtn.textContent = 'Continue Now'; } }, 5000);
@@ -418,37 +535,117 @@
             }, 1000);
             continueBtn.addEventListener('click', () => { if (!continueBtn.disabled) { window.location.href = redirectUrl; } });
 
-            // --- HISTORY API & MODAL LOGIC ---
-            function openModal() {
-                qrModalOverlay.classList.add('visible');
+            // --- QR MODAL (HISTORY API) LOGIC ---
+            function openQrModal() {
+                if(qrModalOverlay) qrModalOverlay.classList.add('visible');
                 history.pushState({modal: 'qr'}, 'Support Me', '#qr');
             }
 
-            function closeModal() {
-                qrModalOverlay.classList.remove('visible');
+            function closeQrModal() {
+                if(qrModalOverlay) qrModalOverlay.classList.remove('visible');
             }
 
-            showQrBtn.addEventListener('click', (event) => {
-                event.preventDefault();
-                openModal();
-            });
+            if(showQrBtn) {
+                showQrBtn.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    openQrModal();
+                });
+            }
 
-            closeQrBtn.addEventListener('click', () => {
-                history.back();
-            });
-
-            qrModalOverlay.addEventListener('click', (event) => {
-                if (event.target === qrModalOverlay) {
+            if(closeQrBtn) {
+                closeQrBtn.addEventListener('click', () => {
                     history.back();
-                }
-            });
+                });
+            }
 
+            if(qrModalOverlay) {
+                qrModalOverlay.addEventListener('click', (event) => {
+                    if (event.target === qrModalOverlay) {
+                        history.back();
+                    }
+                });
+            }
+            
+            // Handle browser back button for modal
             window.onpopstate = function(event) {
-                if (qrModalOverlay.classList.contains('visible')) {
-                    closeModal();
+                if (qrModalOverlay && qrModalOverlay.classList.contains('visible')) {
+                    closeQrModal();
                 }
             };
-        });
+
+            // --- === START: INJECTED DRAWER MENU SCRIPT === ---
+            
+            // Drawer menu ke elements
+            const drawerToggle = document.getElementById('drawer-toggle');
+            const drawerNav = document.getElementById('drawer-nav');
+            const drawerOverlay = document.getElementById('drawer-overlay');
+
+            // Drawer menu functions
+            function openDrawer() {
+                drawerToggle.classList.add('active');
+                drawerNav.classList.add('active');
+                drawerOverlay.classList.add('active');
+                drawerToggle.setAttribute('aria-expanded', 'true');
+                drawerNav.setAttribute('aria-hidden', 'false');
+                drawerToggle.classList.remove('hidden');
+            }
+
+            function closeDrawer() {
+                drawerToggle.classList.remove('active');
+                drawerNav.classList.remove('active');
+                drawerOverlay.classList.remove('active');
+                drawerToggle.setAttribute('aria-expanded', 'false');
+                drawerNav.setAttribute('aria-hidden', 'true');
+            }
+
+            function setupDrawer() {
+                drawerToggle.addEventListener('click', () => {
+                    const isExpanded = drawerToggle.classList.contains('active');
+                    if (isExpanded) {
+                        closeDrawer();
+                    } else {
+                        openDrawer();
+                    }
+                });
+            }
+
+            function setupClosers() {
+                document.addEventListener('keyup', (e) => {
+                    if (e.key === 'Escape' && drawerNav.classList.contains('active')) {
+                        closeDrawer();
+                    }
+                });
+                drawerOverlay.addEventListener('click', () => {
+                    closeDrawer();
+                });
+            }
+
+            function setupScrollStopListener() {
+                let scrollTimer;
+                window.addEventListener('scroll', () => {
+                    if (drawerNav.classList.contains('active')) {
+                        return;
+                    }
+                    drawerToggle.classList.add('hidden');
+                    clearTimeout(scrollTimer);
+                    scrollTimer = setTimeout(() => {
+                        drawerToggle.classList.remove('hidden');
+                    }, 250);
+                }, { passive: true });
+            }
+
+            // Check karo ki drawer elements page par hain ya nahi
+            if (drawerToggle && drawerNav && drawerOverlay) {
+                // Agar hain, tabhi setup functions call karo
+                setupDrawer();
+                setupClosers();
+                setupScrollStopListener();
+            } else {
+                console.warn('Drawer menu component ke saare elements nahi mile.');
+            }
+            // --- === END: INJECTED DRAWER MENU SCRIPT === ---
+
+        }); // End of DOMContentLoaded
     </script>
 </body>
 </html>
