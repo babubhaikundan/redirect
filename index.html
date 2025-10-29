@@ -10,9 +10,10 @@
 
         /* --- CSS Variables for Theme --- */
         :root {
+            /* Page Theme */
             --bg-color: #e9ebee;
             --container-bg: #ffffff;
-            --text-color: #1c1e21;
+            --text-color: #1c1e21; /* Main text color */
             --subtitle-color: #606770;
             --primary-color: #0d6efd;
             --primary-hover: #0b5ed7;
@@ -20,10 +21,8 @@
             --disabled-bg: #e4e6eb;
             --disabled-text: #8d949e;
             --modal-overlay-bg: rgba(0, 0, 0, 0.7);
-            --footer-bg: #1a1a1a;
-            --footer-hover-bg: #2a2a2a;
 
-            /* --- Drawer Menu CSS Variables --- */
+            /* Drawer Menu Theme */
             --drawer-text-color: #f5f5ff;
             --drawer-primary-color: #00ffc8;
             --drawer-bg-color: linear-gradient(180deg, rgba(10, 20, 35, .9), rgba(5, 10, 15, .85));
@@ -31,18 +30,15 @@
         }
 
         [data-theme="dark"] {
+            /* Page Theme */
             --bg-color: #18191a;
             --container-bg: #242526;
-            --text-color: #e4e6eb;
+            --text-color: #e4e6eb; /* Main text color */
             --subtitle-color: #b0b3b8;
-            --primary-color: #0d6efd;
-            --primary-hover: #3b8bfd;
             --border-color: #3a3b3c;
             --disabled-bg: #3a3b3c;
             --disabled-text: #8a8d91;
             --modal-overlay-bg: rgba(0, 0, 0, 0.85);
-            --footer-bg: #0c0d0e;
-            --footer-hover-bg: #1c1d1e;
         }
 
         /* --- Animations --- */
@@ -229,7 +225,9 @@
         .drawer-toggle {
             position: fixed;
             top: 18px;
-            left: 15px;
+            /* Changed left to right for better placement with theme-toggle */
+            right: 15px; 
+            /* Pushed container theme-toggle left */
             z-index: 1100;
             background: 0 0;
             border: none;
@@ -242,13 +240,29 @@
             box-sizing: content-box;
             transition: transform .4s ease, opacity .4s ease
         }
+        /* Pushing container's theme toggle to make space for drawer toggle */
+        .theme-switch-wrapper {
+            right: 60px; 
+        }
+
         .drawer-toggle.hidden {
             transform: translateY(-100px);
             opacity: 0;
             pointer-events: none
         }
-    .drawer-toggle span{height:5px;background:var(--text-color);border-radius:3px;display:block;transition:all .25s}
-
+        .drawer-toggle span {
+            height: 5px;
+            /* === FIX APPLIED === */
+            /* Using --text-color so it changes with theme */
+            background: var(--text-color); 
+            border-radius: 3px;
+            display: block;
+            transition: all .25s
+        }
+        /* When active (X icon), color should be white */
+        .drawer-toggle.active span {
+            background: var(--drawer-text-color, #f5f5ff);
+        }
         .drawer-toggle.active span:nth-child(1) {
             transform: translateY(10px) rotate(45deg)
         }
@@ -365,7 +379,7 @@
             border-radius:25px;
             text-decoration:none;
             box-shadow:0 4px 10px rgba(0,0,0,.3);
-            border:1px solid rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,2S5,.05);
             transition:transform .3s ease,box-shadow .3s ease
         }
         .bawal-footer-link:hover{
@@ -491,87 +505,11 @@
                     localStorage.setItem('theme', 'light');
                 }
             }
-
-            toggleSwitch.addEventListener('change', switchTheme, false);
-
-            // --- Countdown and Redirect Logic ---
-            const countdownElement = document.getElementById('countdown');
-            const continueBtn = document.getElementById('continueBtn');
-            const urlParams = new URLSearchParams(window.location.search);
-            const redirectUrl = urlParams.get('url');
             
-            // --- Elements for QR Modal ---
-            const showQrBtn = document.getElementById('show-qr-btn');
-            const qrModalOverlay = document.getElementById('qr-modal-overlay');
-            const closeQrBtn = document.getElementById('close-qr-btn');
-
-            if (!redirectUrl) {
-                document.querySelector('.container').innerHTML = `<h1 style="color: #d93025;">Error: Destination URL not found.</h1><p>Please make sure the link is correct.</p>`;
-                // Hide footer if there's an error
-                const footer = document.querySelector('.bawal-footer-wrapper');
-                if(footer) footer.style.display = 'none';
-                
-                // Hide drawer toggle if error
-                const drawerBtn = document.getElementById('drawer-toggle');
-                if(drawerBtn) drawerBtn.style.display = 'none';
-
-                return; // Baaki ka JS run nahi hoga agar URL nahi hai
+            if (toggleSwitch) {
+                toggleSwitch.addEventListener('change', switchTheme, false);
             }
 
-            // --- Countdown and Redirect Logic (Only if URL exists) ---
-            let countdown = 6;
-            countdownElement.textContent = countdown;
-            setTimeout(() => { if(countdown > 0) { continueBtn.disabled = false; continueBtn.textContent = 'Continue Now'; } }, 5000);
-            const timer = setInterval(() => {
-                countdown--;
-                countdownElement.textContent = countdown;
-                if (countdown <= 0) {
-                    clearInterval(timer);
-                    document.getElementById('countdown-message').innerHTML = "Redirecting you now...";
-                    continueBtn.disabled = true;
-                    continueBtn.textContent = 'Redirecting...';
-                    window.location.href = redirectUrl;
-                }
-            }, 1000);
-            continueBtn.addEventListener('click', () => { if (!continueBtn.disabled) { window.location.href = redirectUrl; } });
-
-            // --- QR MODAL (HISTORY API) LOGIC ---
-            function openQrModal() {
-                if(qrModalOverlay) qrModalOverlay.classList.add('visible');
-                history.pushState({modal: 'qr'}, 'Support Me', '#qr');
-            }
-
-            function closeQrModal() {
-                if(qrModalOverlay) qrModalOverlay.classList.remove('visible');
-            }
-
-            if(showQrBtn) {
-                showQrBtn.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    openQrModal();
-                });
-            }
-
-            if(closeQrBtn) {
-                closeQrBtn.addEventListener('click', () => {
-                    history.back();
-                });
-            }
-
-            if(qrModalOverlay) {
-                qrModalOverlay.addEventListener('click', (event) => {
-                    if (event.target === qrModalOverlay) {
-                        history.back();
-                    }
-                });
-            }
-            
-            // Handle browser back button for modal
-            window.onpopstate = function(event) {
-                if (qrModalOverlay && qrModalOverlay.classList.contains('visible')) {
-                    closeQrModal();
-                }
-            };
 
             // --- === START: INJECTED DRAWER MENU SCRIPT === ---
             
@@ -582,6 +520,7 @@
 
             // Drawer menu functions
             function openDrawer() {
+                if(!drawerToggle || !drawerNav || !drawerOverlay) return;
                 drawerToggle.classList.add('active');
                 drawerNav.classList.add('active');
                 drawerOverlay.classList.add('active');
@@ -591,6 +530,7 @@
             }
 
             function closeDrawer() {
+                if(!drawerToggle || !drawerNav || !drawerOverlay) return;
                 drawerToggle.classList.remove('active');
                 drawerNav.classList.remove('active');
                 drawerOverlay.classList.remove('active');
@@ -611,19 +551,21 @@
 
             function setupClosers() {
                 document.addEventListener('keyup', (e) => {
-                    if (e.key === 'Escape' && drawerNav.classList.contains('active')) {
+                    if (e.key === 'Escape' && drawerNav && drawerNav.classList.contains('active')) {
                         closeDrawer();
                     }
                 });
-                drawerOverlay.addEventListener('click', () => {
-                    closeDrawer();
-                });
+                if(drawerOverlay) {
+                    drawerOverlay.addEventListener('click', () => {
+                        closeDrawer();
+                    });
+                }
             }
 
             function setupScrollStopListener() {
                 let scrollTimer;
                 window.addEventListener('scroll', () => {
-                    if (drawerNav.classList.contains('active')) {
+                    if (!drawerToggle || (drawerNav && drawerNav.classList.contains('active'))) {
                         return;
                     }
                     drawerToggle.classList.add('hidden');
@@ -644,6 +586,100 @@
                 console.warn('Drawer menu component ke saare elements nahi mile.');
             }
             // --- === END: INJECTED DRAWER MENU SCRIPT === ---
+
+
+            // --- Countdown and Redirect Logic ---
+            const countdownElement = document.getElementById('countdown');
+            const continueBtn = document.getElementById('continueBtn');
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectUrl = urlParams.get('url');
+            
+            // --- Elements for QR Modal ---
+            const showQrBtn = document.getElementById('show-qr-btn');
+            const qrModalOverlay = document.getElementById('qr-modal-overlay');
+            const closeQrBtn = document.getElementById('close-qr-btn');
+
+            if (!redirectUrl) {
+                const container = document.querySelector('.container');
+                if(container) {
+                     container.innerHTML = `<h1 style="color: #d93025;">Error: Destination URL not found.</h1><p>Please make sure the link is correct.</p>`;
+                }
+                // Hide footer if there's an error
+                const footer = document.querySelector('.bawal-footer-wrapper');
+                if(footer) footer.style.display = 'none';
+                
+                // Hide drawer toggle if error
+                if(drawerToggle) drawerToggle.style.display = 'none';
+                
+                // Hide theme toggle if error
+                const themeToggle = document.querySelector('.theme-switch-wrapper');
+                if(themeToggle) themeToggle.style.display = 'none';
+
+                return; // Baaki ka JS run nahi hoga agar URL nahi hai
+            }
+
+            // --- Countdown and Redirect Logic (Only if URL exists) ---
+            if(countdownElement && continueBtn) {
+                let countdown = 6;
+                countdownElement.textContent = countdown;
+                setTimeout(() => { if(countdown > 0) { continueBtn.disabled = false; continueBtn.textContent = 'Continue Now'; } }, 5000);
+                
+                const timer = setInterval(() => {
+                    countdown--;
+                    countdownElement.textContent = countdown;
+                    if (countdown <= 0) {
+                        clearInterval(timer);
+                        const countdownMsg = document.getElementById('countdown-message');
+                        if(countdownMsg) countdownMsg.innerHTML = "Redirecting you now...";
+                        continueBtn.disabled = true;
+                        continueBtn.textContent = 'Redirecting...';
+                        window.location.href = redirectUrl;
+                    }
+                }, 1000);
+                
+                continueBtn.addEventListener('click', () => { if (!continueBtn.disabled) { window.location.href = redirectUrl; } });
+            }
+
+            // --- QR MODAL (HISTORY API) LOGIC ---
+            function openQrModal() {
+                if(qrModalOverlay) qrModalOverlay.classList.add('visible');
+                history.pushState({modal: 'qr'}, 'Support Me', '#qr');
+            }
+
+            function closeQrModal() {
+                if(qrModalOverlay) qrModalOverlay.classList.remove('visible');
+            }
+
+            if(showQrBtn) {
+                showQrBtn.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    openQrModal();
+                });
+            }
+
+            if(closeQrBtn) {
+                closeQrBtn.addEventListener('click', () => {
+                    // Check if modal is open before going back
+                    if (qrModalOverlay && qrModalOverlay.classList.contains('visible')) {
+                         history.back();
+                    }
+                });
+            }
+
+            if(qrModalOverlay) {
+                qrModalOverlay.addEventListener('click', (event) => {
+                    if (event.target === qrModalOverlay) {
+                         history.back();
+                    }
+                });
+            }
+            
+            // Handle browser back button for modal
+            window.onpopstate = function(event) {
+                if (qrModalOverlay && qrModalOverlay.classList.contains('visible')) {
+                    closeQrModal();
+                }
+            };
 
         }); // End of DOMContentLoaded
     </script>
